@@ -1,0 +1,129 @@
+﻿@model LabExamVM
+
+
+<h2>Lab Exam Details</h2>
+
+<form asp-action="LabExam" method="post">
+    <input type="hidden" asp-for="LabExam.LabExamId" />
+    <input type="hidden" asp-for="LabExam.ExamSelectionId" />
+    <input type="hidden" asp-for="LabExam.AppointmentId" />
+    <input type="hidden" asp-for="LabExam.LabTechnicianId" />
+    <input type="hidden" asp-for="LabExam.HeadLabTechnicianId" />
+    <input type="hidden" asp-for="LabExam.ExamDate" />
+    <input type="hidden" asp-for="LabExam.RequestDate" />
+    <input type="hidden" asp-for="LabExam.DoctorsNotes" />
+    <input type="hidden" asp-for="LabExam.HeadLabNotes" />
+
+
+    @if (Model.LabExam.DoctorsNotes != null)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Doctor Notes
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.LabExam.DoctorsNotes</p>
+            </div>
+        </div>
+    }
+    @if(Model.LabExam.HeadLabNotes != null)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Head Lab Notes
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.LabExam.HeadLabNotes</p>
+            </div>
+        </div>
+    }
+
+
+    @if (Model.LabExam.Appointment.Description != null)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Description
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.LabExam.Appointment.Description</p>
+            </div>
+        </div>
+    }
+
+    @if (Model.LabExam.CancelationReason != null)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Cancelation reason
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.LabExam.CancelationReason</p>
+            </div>
+        </div>
+    }
+
+    <div class="mb-3">
+        <label asp-for="LabExam.Result" class="form-label">Result</label>
+        <textarea asp-for="LabExam.Result" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Exam Selection</label>
+        <input class="form-control" value="@Model.ExamSelection?.Name" disabled />
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <div class="d-flex">
+            <a asp-action="Index" class="btn btn-danger">
+                Discard Changes
+            </a>
+
+            <button type="button" class="btn btn-danger ms-3" data-bs-toggle="modal" data-bs-target="#cancelExamModal">
+                Cancel Exam
+            </button>
+        </div>
+        @if (Model.LabExam.Status != Clinic.Enums.ExamStatus.Canceled)
+        {
+            <input type="submit" value="Save Changes" class="btn btn-primary" />
+        }
+        else
+        {
+            <input type="submit" value="Save Changes" class="btn btn-primary" disabled/>
+        }
+
+    </div>
+
+
+
+    
+
+
+
+</form>
+
+<div class="modal fade" id="cancelExamModal" tabindex="-1" aria-labelledby="cancelExamModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="CancelExam" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelExamModalLabel">Cancel Lab Exam</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="labExamId" value="@Model.LabExam.LabExamId" />
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">Reason for cancellation</label>
+                        <textarea name="cancelReason" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Confirm Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

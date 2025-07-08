@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "_Layout";
+}
+@using Clinic.Models.ViewModels
+@model List<UserWithRole>
+
+<div class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h3 class="mb-4">Users</h3>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a asp-controller="Users" asp-action="CreateUser" class="btn btn-primary">Register User</a>
+        </div>
+
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="row g-2">
+                <div class="col-md-4">
+                    <input type="text" name="userName" class="form-control me-1" placeholder="User name..." />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+                <div class="col-md-2 text-md-end">
+                    <a asp-controller="Users" asp-action="Index" class="btn btn-secondary w-100">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover table-striped align-middle border rounded mt-4 mb-4">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Surname</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">NPWZ</th>
+                        <th scope="col">Active</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>@m.User.Name</td>
+                            <td>@m.User.Surname</td>
+                            <td>@m.User.UserName</td>
+                            <td>@m.User.Email</td>
+                            <td>@m.Role</td>
+                            @if (m.User.Doctor != null)
+                            {
+                                <td>@m.User.Doctor.NPWZ</td>
+                            }
+                            else
+                            {
+                                <td> - </td>
+                            }
+
+                            <td>
+                                @if (m.User.IsActive)
+                                {
+                                    <a asp-action="SetActive" asp-route-UserId="@m.User.Id"
+                                       class="btn btn-success">
+                                        <i class="bi bi-check"></i>
+                                    </a>
+
+                                }
+                                else
+                                {
+                                    <a asp-action="SetActive" asp-route-UserId="@m.User.Id"
+                                       class="btn btn-danger">
+                                        <i class="bi bi-x"></i>
+                                    </a>
+                                }
+                            </td>
+
+
+                            <td>
+                                <a asp-action="UpdateUser" asp-route-UserId="@m.User.Id"
+                                   class="btn btn-info">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+

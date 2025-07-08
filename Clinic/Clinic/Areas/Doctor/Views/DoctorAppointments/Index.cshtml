@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Clinic.Models.Appointment>
+@{
+    ViewData["Title"] = "Moje wizyty";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Data wizyty</th>
+            <th>Pacjent</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appt in Model)
+        {
+            <tr>
+                <td>@appt.AppointmentDate?.ToString("g")</td>
+                <td>@appt.Patient.Name @appt.Patient.Surname</td>
+                <td>@appt.Status</td>
+                <td>
+                    <a asp-area="Doctor" asp-controller="DoctorAppointments" asp-action="Details" asp-route-id="@appt.AppointemntId" class="btn btn-sm btn-primary">
+                        Szczegóły
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

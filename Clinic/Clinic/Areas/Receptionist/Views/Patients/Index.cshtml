@@ -1,0 +1,153 @@
+﻿@model PaginatedList<Patient>
+
+<div class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h3 class="mb-4">Patients</h3>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a asp-controller="Patients" asp-action="Create" class="btn btn-primary">Add a Patient</a>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form class="d-flex align-items-stretch" asp-action="Index" asp-controller="Patients">
+                    <input name="searchString" class="form-control me-2" type="search" placeholder="Search for a Patient" />
+                    <button class="btn btn-primary me-2" type="submit">Search</button>
+                    <a asp-controller="Patients" asp-action="Index" class="btn btn-secondary">Clear</a>
+                </form>
+            </div>
+        </div>
+        
+
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover table-striped align-middle border rounded">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Surname</th>
+                        <th scope="col">PESEL</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Street</th>
+                        <th scope="col">Home Num.</th>
+                        <th scope="col">Apartment Num.</th>
+                        <th scope="col"></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in Model.Items)
+                    {
+                        <tr>
+                            <td>@(patient.Name)</td>
+                            <td>@(patient.Surname)</td>
+                            <td>@(patient.PESEL)</td>
+                            <td>@(patient.Address.City)</td>
+                            <td>@(patient.Address.Street)</td>
+                            <td>@(patient.Address.HomeNumber)</td>
+                            <td>@(patient.Address.ApartNumber != null ? patient.Address.ApartNumber.ToString() : "-")</td>
+                            <td>
+                                <a asp-action="UpdatePatient" asp-route-patientid="@patient.PatientId"
+                                   class="btn btn-info">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="DeletePatient" asp-route-patientid="@patient.PatientId"
+                                   class="btn btn-danger">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @* Paging *@
+        <div class="row mt-4">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <nav>
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                            <a class="page-link text-black" asp-route-pageIndex="1"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                <span>First</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                            <a class="page-link text-black" asp-route-pageIndex="@(Model.PageIndex - 1)"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                <span>Previous</span>
+                            </a>
+                        </li>
+
+                        @{
+                            int currentPage = Model.PageIndex;
+                            int totalPages = Model.TotalPages;
+                            var pagesToShow = new List<object>();
+
+                            // Zawsze pokazuj bieżącą stronę
+                            pagesToShow.Add(currentPage);
+
+                            // Dodaj następną stronę jeśli istnieje
+                            if (currentPage + 1 <= totalPages)
+                            {
+                                pagesToShow.Add(currentPage + 1);
+
+                                // Dodaj kropki jeśli jest przerwa między następną stroną a ostatnią
+                                if (currentPage + 2 < totalPages)
+                                {
+                                    pagesToShow.Add("...");
+                                }
+                            }
+
+                            // Dodaj ostatnią stronę jeśli nie została jeszcze dodana
+                            if (!pagesToShow.Contains(totalPages))
+                            {
+                                pagesToShow.Add(totalPages);
+                            }
+                        }
+
+                        @foreach (var item in pagesToShow)
+                        {
+                            if (item is string dots)
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">@dots</span>
+                                </li>
+                            }
+                            else
+                            {
+                                int pageNumber = (int)item;
+                                <li class="page-item @(Model.PageIndex == pageNumber ? "active" : "")">
+                                    <a class="page-link text-black"
+                                       asp-route-pageIndex="@pageNumber"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                        @pageNumber
+                                    </a>
+                                </li>
+                            }
+                        }
+
+                        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                            <a class="page-link text-black" asp-route-pageIndex="@(Model.PageIndex + 1)"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                <span>Next</span>
+                            </a>
+                        </li>
+                        <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link text-black" asp-route-pageIndex="@Model.TotalPages"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                <span>Last</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>

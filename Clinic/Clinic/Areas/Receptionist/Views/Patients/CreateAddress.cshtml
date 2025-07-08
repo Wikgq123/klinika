@@ -1,0 +1,44 @@
+﻿@using Clinic.Models.ViewModels
+@model Address
+<h1>Add an address</h1>
+
+
+<form method="post" asp-controller="Patients" asp-action="CreateAddress">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div>
+        <div class="mb-3">
+            <label asp-for="City" class="form-label">City</label>
+            <input asp-for="City" type="Text" class="form-control">
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+    </div>
+    <div>
+        <div class="mb-3">
+            <label asp-for="Street" class="form-label">Street</label>
+            <input asp-for="Street" type="Text" class="form-control">
+            <span asp-validation-for="Street" class="text-danger"></span>
+        </div>
+    </div>
+    <div>
+        <div class="mb-3">
+            <label asp-for="HomeNumber" class="form-label">Home Number</label>
+            <input asp-for="HomeNumber" type="Text" class="form-control">
+            <span asp-validation-for="HomeNumber" class="text-danger"></span>
+        </div>
+    </div>
+    <div>
+        <div class="mb-3">
+            <label asp-for="ApartNumber" class="form-label">Apartment Number</label>
+            <input asp-for="ApartNumber" type="number" class="form-control" placeholder="fill this field only if necessary">
+            <span asp-validation-for="ApartNumber" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-start">
+            <a asp-action="Create" class="btn btn-secondary">Return</a>
+        </div>
+        <div class="col-6 text-end">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+    </div>
+</form>

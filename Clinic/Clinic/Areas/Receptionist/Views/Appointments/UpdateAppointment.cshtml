@@ -1,0 +1,58 @@
+﻿@using Clinic.Models.ViewModels
+@model AppointmentVM
+
+<h1>Update appointment</h1>
+
+<form method="post" asp-controller="Appointments" asp-action="UpdateAppointment">
+    <input type="hidden" asp-for="Appointment.AppointmentId" />
+    <input type="hidden" asp-for="Appointment.RegistrationDate" />
+    <input type="hidden" asp-for="Appointment.ReceptionistId" />
+    <input type="hidden" asp-for="Appointment.Status" />
+
+    <div class="mb-3">
+        <label asp-for="Appointment.PatientId" class="form-label">Patient</label>
+        <select asp-for="Appointment.PatientId" class="form-select w-100">
+            <option value="">Choose a patient</option>
+            @foreach (var patient in Model.Patients)
+            {
+                <option value="@patient.PatientId">@(patient.Name) @(patient.Surname)</option>
+            }
+        </select>
+        <span asp-validation-for="Appointment.PatientId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Appointment.Description" class="form-label">Description</label>
+        <textarea asp-for="Appointment.Description" class="form-control w-100" rows="3"></textarea>
+        <span asp-validation-for="Appointment.Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Appointment.DoctorId" class="form-label">Doctor</label>
+        <select asp-for="Appointment.DoctorId" class="form-select w-100">
+            <option value="">Choose a doctor</option>
+            @foreach (var doctor in Model.Doctors)
+            {
+                <option value="@doctor.DoctorId">@(doctor.ApplicationUser.Name) @(doctor.ApplicationUser.Surname)</option>
+            }
+        </select>
+        <span asp-validation-for="Appointment.DoctorId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Appointment.AppointmentDate" class="form-label">Appointment Date</label>
+        <input type="datetime-local" asp-for="Appointment.AppointmentDate" class="form-control w-100" 
+        min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Appointment.AppointmentDate" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-6 text-start">
+            <a asp-action="Index" class="btn btn-secondary">Return</a>
+        </div>
+        <div class="col-6 text-end">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+    </div>
+
+
+</form>

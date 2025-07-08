@@ -1,0 +1,65 @@
+﻿﻿@using Clinic.Models.ViewModels
+@model PatientVM
+<h1>Add a Patient</h1>
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<form method="post" asp-controller="Patients" asp-action="Create" class="w-100">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="mb-3">
+        <label asp-for="Patient.Name" class="form-label">Name</label>
+        <input asp-for="Patient.Name" type="Text" class="form-control">
+        <span asp-validation-for="Patient.Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Patient.Surname" class="form-label">Surname</label>
+        <input asp-for="Patient.Surname" type="Text" class="form-control">
+        <span asp-validation-for="Patient.Surname" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Patient.PESEL" class="form-label">PESEL</label>
+        <input asp-for="Patient.PESEL" type="Text" class="form-control">
+        <span asp-validation-for="Patient.PESEL" class="text-danger"></span>
+    </div>
+
+    <label asp-for="Patient.AddressId" class="form-label me-2">Address</label>
+    <div class="mb-3 d-flex align-items-center w-100">
+
+        <select asp-for="Patient.AddressId" class="form-select w-75" id="addressSelect">
+            <option value="">Choose an address</option>
+            @foreach (var address in Model.Addresses)
+            {
+                <option value="@address.AddressId">
+                    @(address.City) @(address.Street) @(address.HomeNumber) @(address.ApartNumber)
+                </option>
+            }
+        </select>
+
+
+        <a asp-action="CreateAddress" class="btn btn-primary ms-2">
+            Add New Address
+        </a>
+
+        <span asp-validation-for="Patient.AddressId" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-6 text-start">
+            <a asp-action="Index" class="btn btn-secondary">Return</a>
+        </div>
+        <div class="col-6 text-end">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+    </div>
+</form>
+
+<script>
+    new TomSelect("#addressSelect", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+</script>

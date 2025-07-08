@@ -1,0 +1,182 @@
+﻿@model Clinic.Models.ViewModels.DoctorAppointmentVM
+@{
+    ViewData["Title"] = "Szczegóły wizyty";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-4">
+    <dl class="row">
+        <dt class="col-sm-2">Pacjent</dt>
+        <dd class="col-sm-10">@Model.Appointment.Patient.Name @Model.Appointment.Patient.Surname</dd>
+
+        <dt class="col-sm-2">Data wizyty</dt>
+        <dd class="col-sm-10">@Model.Appointment.AppointmentDate?.ToString("g")</dd>
+
+        <dt class="col-sm-2">Opis</dt>
+        <dd class="col-sm-10">@Model.Appointment.Description</dd>
+    </dl>
+</div>
+
+<form asp-area="Doctor"
+      asp-controller="DoctorAppointments"
+      asp-action="Update"
+      method="post">
+    <input type="hidden" asp-for="Appointment.AppointemntId" />
+
+    <div class="form-group">
+        <label asp-for="Appointment.Status"></label>
+        <select asp-for="Appointment.Status" class="form-control"
+                asp-items="Html.GetEnumSelectList<Clinic.Enums.AppointmentStatus>()">
+            <option value="">-- wybierz --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Appointment.Diagnosis"></label>
+        <textarea asp-for="Appointment.Diagnosis" class="form-control"></textarea>
+    </div>
+
+    <hr />
+
+    <h4>Zleć badanie laboratoryjne</h4>
+    <div class="form-row mb-3">
+        <div class="col-md-6">
+            <label asp-for="NewLabExamType"></label>
+            <select asp-for="NewLabExamType" class="form-control"
+                    asp-items="@(new SelectList(
+                        Model.ExamSelections
+                             .Where(e => e.Type == Clinic.Enums.ExamType.Lab),
+                        "Shortcut",
+                        "Name"))">
+                <option value="">-- wybierz badanie --</option>
+            </select>
+        </div>
+    </div>
+
+    <h4>Zleć badanie fizykalne</h4>
+    <div class="form-row mb-3">
+        <div class="col-md-6">
+            <label asp-for="NewPhysicalExamType"></label>
+            <select asp-for="NewPhysicalExamType" class="form-control"
+                    asp-items="@(new SelectList(
+                        Model.ExamSelections
+                             .Where(e => e.Type == Clinic.Enums.ExamType.Physical),
+                        "Shortcut",
+                        "Name"))">
+                <option value="">-- wybierz badanie --</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="NewPhysicalExamNotes"></label>
+            <input asp-for="NewPhysicalExamNotes" class="form-control" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Zapisz zmiany</button>
+    <a asp-area="Doctor"
+       asp-controller="DoctorAppointments"
+       asp-action="Index"
+       class="btn btn-secondary mt-3">Powrót</a>
+    @* Przycisk anulowania wizyty *@
+    @if (Model.Appointment.Status != Clinic.Enums.AppointmentStatus.Cancelled)
+    {
+        <a asp-area="Doctor"
+           asp-controller="DoctorAppointments"
+           asp-action="Cancel"
+           asp-route-id="@Model.Appointment.AppointemntId"
+           class="btn btn-danger mt-3 ml-2">Anuluj wizytę</a>
+    }
+    else
+    {
+        <span class="badge bg-secondary mt-3 ml-2">Wizyta anulowana</span>
+    }
+    <hr />
+    <h4>Poprzednie wizyty pacjenta</h4>
+    @if (Model.PreviousVisits.Any())
+    {
+        <table class="table table-sm">
+            <thead><tr><th>Data</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var pv in Model.PreviousVisits)
+                {
+                    <tr>
+                        <td>@pv.AppointmentDate?.ToString("g")</td>
+                        <td>@pv.Status</td>
+                        <td>
+                            <a asp-area="Doctor" asp-controller="DoctorAppointments"
+                               asp-action="Details" asp-route-id="@pv.AppointemntId"
+                               class="btn btn-link btn-sm">Zobacz</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">Brak wcześniejszych wizyt</div>
+    }
+    <hr />
+    <h4>Badania laboratoryjne</h4>
+    @if (Model.Appointment.LabExams?.Any() ?? false)
+    {
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Data zlecenia</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var lab in Model.Appointment.LabExams)
+                {
+                    <tr>
+                        <td>@lab.ExamSelection.Name</td>
+                        <td>@lab.RequestDate.ToString("g")</td>
+                        <td>@lab.Status</td>
+                        <td>
+                            @if (lab.Status == Clinic.Enums.ExamStatus.Completed)
+                            {
+                                <a asp-area="Doctor"
+                                   asp-controller="LabExams"
+                                   asp-action="Details"
+                                   asp-route-id="@lab.LabExamId"
+                                   class="btn btn-link btn-sm">
+                                    Zobacz wynik
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <hr />
+    <h4>Badania fizykalne</h4>
+    @if (Model.Appointment.PhysicalExams?.Any() ?? false)
+    {
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Wynik</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var phy in Model.Appointment.PhysicalExams)
+                {
+                    <tr>
+                        <td>@phy.ExamSelection.Name</td>
+                        <td>@phy.Result</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
+</form>
