@@ -27,7 +27,10 @@ namespace Clinic.Models
 
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            var count = await source.CountAsync(); //total number of items in the source data.      
+            // Ensure the page index is never less than 1 to avoid negative Skip values
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+
+            var count = await source.CountAsync(); //total number of items in the source data.
             var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
 
