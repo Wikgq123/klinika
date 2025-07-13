@@ -34,6 +34,10 @@
               asp-action="Update"
               method="post">
     <input type="hidden" asp-for="Appointment.AppointmentId" />
+    <input type="hidden" asp-for="Appointment.Description" />
+    <input type="hidden" asp-for="Appointment.AppointmentDate" />
+    <input type="hidden" asp-for="Appointment.DoctorId" />
+    <input type="hidden" asp-for="Appointment.PatientId" />
 
     <div class="form-group">
         <label asp-for="Appointment.Status"></label>
