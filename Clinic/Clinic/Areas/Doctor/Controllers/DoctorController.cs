@@ -123,12 +123,20 @@ namespace Clinic.Areas.Doctor.Controllers
 
             if (!string.IsNullOrEmpty(model.NewLabExamType))
             {
+                var head = await _db.HeadLabTechnicians.FirstOrDefaultAsync();
+                if (head == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Brak kierownika laboratorium.");
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _db.LabExams.Add(new LabExam
                 {
                     AppointmentId = appointment.AppointmentId,
                     ExamSelectionId = model.NewLabExamType,
                     Status = ExamStatus.Awaiting,
-                    RequestDate = System.DateTime.Now
+                    RequestDate = System.DateTime.Now,
+                    HeadLabTechnicianId = head.HeadLabTechnicianId
                 });
             }
 
