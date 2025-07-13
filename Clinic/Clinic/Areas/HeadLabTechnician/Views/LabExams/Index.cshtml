@@ -1,0 +1,38 @@
+@model IEnumerable<LabExam>
+
+<div class="container mt-4">
+    <h3 class="mb-4">Lab Exams Approval</h3>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover table-striped align-middle border rounded">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Request Date</th>
+                    <th scope="col">Exam Date</th>
+                    <th scope="col">Exam</th>
+                    <th scope="col">Lab technician</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exam in Model)
+                {
+                    <tr>
+                        <td>@exam.RequestDate</td>
+                        <td>@exam.ExamDate</td>
+                        <td>@exam.ExamSelection?.Name</td>
+                        <td>@exam.LabTechnician?.ApplicationUser?.Name</td>
+                        <td>@exam.Status</td>
+                        <td>
+                            <form asp-action="AcceptExam" method="post" class="d-flex">
+                                <input type="hidden" name="id" value="@exam.LabExamId" />
+                                <input type="text" name="headNotes" class="form-control me-2" placeholder="Notes" />
+                                <button type="submit" class="btn btn-success">Accept</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
