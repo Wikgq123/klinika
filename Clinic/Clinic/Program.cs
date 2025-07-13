@@ -1,10 +1,10 @@
 using Clinic.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Clinic.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Clinic.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +21,13 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
+// Apply migrations and seed database
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await DbInit.AdminInit(services);
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+    await DbInit.Seed(services);
 }
 
 // Configure the HTTP request pipeline.
