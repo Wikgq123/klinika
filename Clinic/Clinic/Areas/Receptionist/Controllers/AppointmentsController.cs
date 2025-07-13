@@ -83,9 +83,9 @@ namespace Clinic.Areas.Receptionist.Controllers
                 model.Appointment.RegistrationDate = DateTime.Now;
 
                 var userId = userManager.GetUserId(User);
-                var recpetionist = db.Receptionists.FirstOrDefault(x => x.ApplicationUserId == userId);
-                if (recpetionist != null)
-                    model.Appointment.ReceptionistId = recpetionist.ReceptionistId;
+                var receptionist = db.Receptionists.FirstOrDefault(x => x.ApplicationUserId == userId);
+                if (receptionist != null)
+                    model.Appointment.ReceptionistId = receptionist.ReceptionistId;
                 else
                     return NotFound();
 
