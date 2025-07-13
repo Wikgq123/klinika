@@ -50,12 +50,12 @@ namespace Clinic.Areas.Doctor.Controllers
                 .Include(a => a.Patient)
                 .Include(a => a.LabExams).ThenInclude(le => le.ExamSelection)
                 .Include(a => a.PhysicalExams).ThenInclude(pe => pe.ExamSelection)
-                .FirstOrDefaultAsync(a => a.AppointemntId == id);
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
             if (appointment == null) return NotFound();
 
             var previousVisits = await _db.Appointments
-                .Where(a => a.PatientId == appointment.PatientId && a.AppointemntId != id)
+                .Where(a => a.PatientId == appointment.PatientId && a.AppointmentId != id)
                 .OrderByDescending(a => a.AppointmentDate)
                 .Take(5)
                 .ToListAsync();
@@ -82,11 +82,11 @@ namespace Clinic.Areas.Doctor.Controllers
                     .Include(a => a.Patient)
                     .Include(a => a.LabExams).ThenInclude(le => le.ExamSelection)
                     .Include(a => a.PhysicalExams).ThenInclude(pe => pe.ExamSelection)
-                    .FirstOrDefaultAsync(a => a.AppointemntId == model.Appointment.AppointemntId);
+                    .FirstOrDefaultAsync(a => a.AppointmentId == model.Appointment.AppointmentId);
                 if (fullAppt == null) return NotFound();
 
                 var previous = await _db.Appointments
-                    .Where(a => a.PatientId == fullAppt.PatientId && a.AppointemntId != fullAppt.AppointemntId)
+                    .Where(a => a.PatientId == fullAppt.PatientId && a.AppointmentId != fullAppt.AppointmentId)
                     .OrderByDescending(a => a.AppointmentDate)
                     .Take(5)
                     .ToListAsync();
@@ -98,7 +98,7 @@ namespace Clinic.Areas.Doctor.Controllers
                 return View("Details", model);
             }
 
-            var appointment = await _db.Appointments.FindAsync(model.Appointment.AppointemntId);
+            var appointment = await _db.Appointments.FindAsync(model.Appointment.AppointmentId);
             if (appointment == null) return NotFound();
 
             appointment.Status = model.Appointment.Status;
@@ -109,7 +109,7 @@ namespace Clinic.Areas.Doctor.Controllers
             {
                 _db.LabExams.Add(new LabExam
                 {
-                    AppointmentId = appointment.AppointemntId,
+                    AppointmentId = appointment.AppointmentId,
                     ExamSelectionId = model.NewLabExamType,
                     Status = ExamStatus.Awaiting,
                     RequestDate = System.DateTime.Now
@@ -120,7 +120,7 @@ namespace Clinic.Areas.Doctor.Controllers
             {
                 _db.PhysicalExams.Add(new PhysicalExam
                 {
-                    AppointmentId = appointment.AppointemntId,
+                    AppointmentId = appointment.AppointmentId,
                     ExamSelectionId = model.NewPhysicalExamType,
                     Result = model.NewPhysicalExamNotes
                 });
