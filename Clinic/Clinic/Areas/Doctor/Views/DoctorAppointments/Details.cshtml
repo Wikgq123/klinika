@@ -116,12 +116,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var lab in Model.Appointment.LabExams)
+                @for (int i = 0; i < Model.Appointment.LabExams.Count(); i++)
                 {
+                    var lab = Model.Appointment.LabExams.ElementAt(i);
                     <tr>
                         <td>@lab.ExamSelection.Name</td>
                         <td>@lab.RequestDate.ToString("g")</td>
-                        <td>@lab.Status</td>
+                        <td>
+                            <input type="hidden" asp-for="LabExamIds[i]" value="@lab.LabExamId" />
+                            <select asp-for="LabExamStatuses[i]" class="form-control"
+                                    asp-items="Html.GetEnumSelectList<Clinic.Enums.ExamStatus>()"></select>
+                        </td>
                         <td>
                             @if (lab.Status == Clinic.Enums.ExamStatus.Completed)
                             {

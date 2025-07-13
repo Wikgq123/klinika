@@ -1,4 +1,5 @@
 ﻿using Clinic.Models;
+using Clinic.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,5 +22,9 @@ namespace Clinic.Models.ViewModels
 
         [Display(Name = "Notatki do badania fizykalnego")]
         public string? NewPhysicalExamNotes { get; set; }
+
+        // pola do edycji statusu istniejących badań laboratoryjnych
+        public List<int>? LabExamIds { get; set; }
+        public List<ExamStatus>? LabExamStatuses { get; set; }
     }
 }
