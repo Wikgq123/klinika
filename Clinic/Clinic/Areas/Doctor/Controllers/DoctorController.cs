@@ -43,6 +43,22 @@ namespace Clinic.Areas.Doctor.Controllers
             return View(appointments);
         }
 
+        // GET: Doctor/DoctorAppointments/Archive
+        public async Task<IActionResult> Archive()
+        {
+            var userId = _userManager.GetUserId(User);
+            var doctor = await _db.Doctors.FirstOrDefaultAsync(d => d.ApplicationUserId == userId);
+            if (doctor == null) return NotFound();
+
+            var pastAppointments = await _db.Appointments
+                .Include(a => a.Patient)
+                .Where(a => a.DoctorId == doctor.DoctorId && a.AppointmentDate < System.DateTime.Now)
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToListAsync();
+
+            return View(pastAppointments);
+        }
+
         // GET: Doctor/DoctorAppointments/Details/5
         public async Task<IActionResult> Details(int id)
         {
