@@ -117,6 +117,7 @@ namespace Clinic.Areas.LabTechnician.Controllers
                         labExam.LabTechnicianId = null;
                         Console.WriteLine("error assigning labtechnician, labtechnician ID is null");
                     }
+                    db.LabExams.Update(labExam);
 
 
 
