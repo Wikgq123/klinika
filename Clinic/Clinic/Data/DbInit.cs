@@ -5,7 +5,7 @@ namespace Clinic.Data
 {
     public class DbInit
     {
-        public static async Task AdminInit(IServiceProvider serviceProvider)
+        public static async Task Seed(IServiceProvider serviceProvider)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
@@ -28,10 +28,27 @@ namespace Clinic.Data
                 }
             }
 
-            string email = "admin@admin.com";
-            string password = "AdminAdmin1!";
-            string roleName = "Admin";
+            await CreateUser(userManager, dbContext, "admin@admin.com", "AdminAdmin1!", SD.Role_Admin,
+                user => dbContext.Admins.Add(new Admin { ApplicationUserId = user.Id }));
 
+            await CreateUser(userManager, dbContext, "doctor@clinic.com", "Doctor123!", SD.Role_Doctor,
+                user => dbContext.Doctors.Add(new Doctor { ApplicationUserId = user.Id }));
+
+            await CreateUser(userManager, dbContext, "reception@clinic.com", "Reception123!", SD.Role_Receptionist,
+                user => dbContext.Receptionists.Add(new Receptionist { ApplicationUserId = user.Id }));
+
+            await CreateUser(userManager, dbContext, "lab@clinic.com", "Labtech123!", SD.Role_LabTechnician,
+                user => dbContext.LabTechnicians.Add(new LabTechnician { ApplicationUserId = user.Id }));
+
+            await CreateUser(userManager, dbContext, "headlab@clinic.com", "Headlab123!", SD.Role_HeadLabTechnician,
+                user => dbContext.HeadLabTechnicians.Add(new HeadLabTechnician { ApplicationUserId = user.Id }));
+
+            dbContext.SaveChanges();
+        }
+
+        private static async Task CreateUser(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
+            string email, string password, string role, Action<ApplicationUser> createRelatedEntity)
+        {
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)
             {
@@ -39,22 +56,34 @@ namespace Clinic.Data
                 {
                     UserName = email,
                     Email = email,
-                    Name = "Admin",
-                    Surname = "Admin"
+                    Name = email.Split('@')[0],
+                    Surname = "User"
                 };
                 await userManager.CreateAsync(user, password);
             }
 
-            if (!await userManager.IsInRoleAsync(user, roleName))
+            if (!await userManager.IsInRoleAsync(user, role))
             {
-                await userManager.AddToRoleAsync(user, roleName);
+                await userManager.AddToRoleAsync(user, role);
             }
 
-            if (!dbContext.Admins.Any(a => a.ApplicationUserId == user.Id))
+            if (createRelatedEntity != null && !RelatedExists(context, role, user.Id))
             {
-                dbContext.Admins.Add(new Admin { ApplicationUserId = user.Id });
-                dbContext.SaveChanges();
+                createRelatedEntity(user);
             }
+        }
+
+        private static bool RelatedExists(ApplicationDbContext context, string role, string userId)
+        {
+            return role switch
+            {
+                SD.Role_Admin => context.Admins.Any(a => a.ApplicationUserId == userId),
+                SD.Role_Doctor => context.Doctors.Any(a => a.ApplicationUserId == userId),
+                SD.Role_Receptionist => context.Receptionists.Any(a => a.ApplicationUserId == userId),
+                SD.Role_LabTechnician => context.LabTechnicians.Any(a => a.ApplicationUserId == userId),
+                SD.Role_HeadLabTechnician => context.HeadLabTechnicians.Any(a => a.ApplicationUserId == userId),
+                _ => false
+            };
         }
 
     }
