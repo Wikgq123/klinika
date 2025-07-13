@@ -22,7 +22,7 @@
       asp-controller="DoctorAppointments"
       asp-action="Update"
       method="post">
-    <input type="hidden" asp-for="Appointment.AppointemntId" />
+    <input type="hidden" asp-for="Appointment.AppointmentId" />
 
     <div class="form-group">
         <label asp-for="Appointment.Status"></label>
@@ -84,7 +84,7 @@
         <a asp-area="Doctor"
            asp-controller="DoctorAppointments"
            asp-action="Cancel"
-           asp-route-id="@Model.Appointment.AppointemntId"
+           asp-route-id="@Model.Appointment.AppointmentId"
            class="btn btn-danger mt-3 ml-2">Anuluj wizytę</a>
     }
     else
@@ -105,7 +105,7 @@
                         <td>@pv.Status</td>
                         <td>
                             <a asp-area="Doctor" asp-controller="DoctorAppointments"
-                               asp-action="Details" asp-route-id="@pv.AppointemntId"
+                               asp-action="Details" asp-route-id="@pv.AppointmentId"
                                class="btn btn-link btn-sm">Zobacz</a>
                         </td>
                     </tr>
