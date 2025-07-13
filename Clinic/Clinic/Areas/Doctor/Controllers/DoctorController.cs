@@ -155,6 +155,9 @@ namespace Clinic.Areas.Doctor.Controllers
                     RequestDate = System.DateTime.Now,
                     HeadLabTechnicianId = head.HeadLabTechnicianId
                 });
+
+                // ensure the appointment appears as in progress when exams are ordered
+                appointment.Status = AppointmentStatus.InProgress;
             }
 
             if (!string.IsNullOrEmpty(model.NewPhysicalExamType) && !string.IsNullOrEmpty(model.NewPhysicalExamNotes))

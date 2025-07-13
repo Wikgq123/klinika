@@ -20,9 +20,11 @@
         <div class="table-responsive shadow-sm rounded">
             <table class="table table-hover table-striped align-middle border rounded">
                 <thead class="table-light">
-                    <tr>
+                <tr>
                         <th scope="col">Request Date</th>
                         <th scope="col">Exam Date</th>
+                        <th scope="col">Exam</th>
+                        <th scope="col">Patient</th>
                         <th scope="col">Status</th>
                         <th scope="col">Lab technician name</th>
                         <th scope="col"></th>
@@ -34,6 +36,8 @@
                         <tr >
                             <td>@(labExam.RequestDate != null ? labExam.RequestDate : "-")</td>
                             <td>@(labExam.ExamDate != null ? labExam.ExamDate : "-")</td>
+                            <td>@labExam.ExamSelection?.Name</td>
+                            <td>@(labExam.Appointment?.Patient != null ? labExam.Appointment.Patient.Name + " " + labExam.Appointment.Patient.Surname : "-")</td>
                             <td>@(labExam.Status != null ? labExam.Status : "-")</td>
                             <td>@(labExam.LabTechnician?.ApplicationUser?.Name ?? "-")</td>
                             <td>
