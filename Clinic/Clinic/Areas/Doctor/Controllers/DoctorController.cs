@@ -80,7 +80,9 @@ namespace Clinic.Areas.Doctor.Controllers
             {
                 Appointment = appointment,
                 ExamSelections = await _db.ExamSelections.ToListAsync(),
-                PreviousVisits = previousVisits
+                PreviousVisits = previousVisits,
+                LabExamIds = appointment.LabExams?.Select(e => e.LabExamId).ToList(),
+                LabExamStatuses = appointment.LabExams?.Select(e => e.Status).ToList()
             };
 
             return View(model);
@@ -110,6 +112,8 @@ namespace Clinic.Areas.Doctor.Controllers
                 model.Appointment = fullAppt;
                 model.ExamSelections = await _db.ExamSelections.ToListAsync();
                 model.PreviousVisits = previous;
+                model.LabExamIds = fullAppt.LabExams?.Select(e => e.LabExamId).ToList();
+                model.LabExamStatuses = fullAppt.LabExams?.Select(e => e.Status).ToList();
 
                 return View("Details", model);
             }
@@ -120,6 +124,19 @@ namespace Clinic.Areas.Doctor.Controllers
             appointment.Status = model.Appointment.Status;
             appointment.Diagnosis = model.Appointment.Diagnosis;
             _db.Appointments.Update(appointment);
+
+            if (model.LabExamIds != null && model.LabExamStatuses != null)
+            {
+                for (int i = 0; i < model.LabExamIds.Count && i < model.LabExamStatuses.Count; i++)
+                {
+                    var exam = await _db.LabExams.FindAsync(model.LabExamIds[i]);
+                    if (exam != null)
+                    {
+                        exam.Status = model.LabExamStatuses[i];
+                        _db.LabExams.Update(exam);
+                    }
+                }
+            }
 
             if (!string.IsNullOrEmpty(model.NewLabExamType))
             {
