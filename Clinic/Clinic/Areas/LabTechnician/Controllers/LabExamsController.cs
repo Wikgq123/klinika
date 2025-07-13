@@ -30,7 +30,10 @@ namespace Clinic.Areas.LabTechnician.Controllers
 
             IQueryable<LabExam> labExamsQuery = db.LabExams
                 .Include(x => x.LabTechnician)
-                .ThenInclude(x => x.ApplicationUser);
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.ExamSelection)
+                .Include(x => x.Appointment)
+                    .ThenInclude(a => a.Patient);
 
             // Jeśli istnieje funkcjonalność wyszukiwania
             if (!string.IsNullOrEmpty(searchString))
