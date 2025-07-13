@@ -123,7 +123,7 @@ namespace Clinic.Areas.Doctor.Controllers
 
             appointment.Status = model.Appointment.Status;
             appointment.Diagnosis = model.Appointment.Diagnosis;
-            _db.Appointments.Update(appointment);
+            _db.Entry(appointment).State = EntityState.Modified;
 
             if (model.LabExamIds != null && model.LabExamStatuses != null)
             {
