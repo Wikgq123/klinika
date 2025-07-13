@@ -18,10 +18,21 @@
     </dl>
 </div>
 
-<form asp-area="Doctor"
-      asp-controller="DoctorAppointments"
-      asp-action="Update"
-      method="post">
+<ul class="nav nav-tabs" id="apptTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="visit-tab" data-bs-toggle="tab" data-bs-target="#visit" type="button" role="tab" aria-controls="visit" aria-selected="true">Wizyta</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">Historia</button>
+    </li>
+</ul>
+<div class="tab-content mt-3" id="apptTabsContent">
+    <div class="tab-pane fade show active" id="visit" role="tabpanel" aria-labelledby="visit-tab">
+
+        <form asp-area="Doctor"
+              asp-controller="DoctorAppointments"
+              asp-action="Update"
+              method="post">
     <input type="hidden" asp-for="Appointment.AppointemntId" />
 
     <div class="form-group">
@@ -92,32 +103,6 @@
         <span class="badge bg-secondary mt-3 ml-2">Wizyta anulowana</span>
     }
     <hr />
-    <h4>Poprzednie wizyty pacjenta</h4>
-    @if (Model.PreviousVisits.Any())
-    {
-        <table class="table table-sm">
-            <thead><tr><th>Data</th><th>Status</th><th></th></tr></thead>
-            <tbody>
-                @foreach (var pv in Model.PreviousVisits)
-                {
-                    <tr>
-                        <td>@pv.AppointmentDate?.ToString("g")</td>
-                        <td>@pv.Status</td>
-                        <td>
-                            <a asp-area="Doctor" asp-controller="DoctorAppointments"
-                               asp-action="Details" asp-route-id="@pv.AppointemntId"
-                               class="btn btn-link btn-sm">Zobacz</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="alert alert-info">Brak wcześniejszych wizyt</div>
-    }
-    <hr />
     <h4>Badania laboratoryjne</h4>
     @if (Model.Appointment.LabExams?.Any() ?? false)
     {
@@ -180,3 +165,35 @@
 
 
 </form>
+    </div>
+
+    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <h4>Poprzednie wizyty pacjenta</h4>
+        @if (Model.PreviousVisits.Any())
+        {
+            <table class="table table-sm">
+                <thead>
+                    <tr><th>Data</th><th>Status</th><th></th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var pv in Model.PreviousVisits)
+                    {
+                        <tr>
+                            <td>@pv.AppointmentDate?.ToString("g")</td>
+                            <td>@pv.Status</td>
+                            <td>
+                                <a asp-area="Doctor" asp-controller="DoctorAppointments"
+                                   asp-action="Details" asp-route-id="@pv.AppointemntId"
+                                   class="btn btn-link btn-sm">Zobacz</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">Brak wcześniejszych wizyt</div>
+        }
+    </div>
+</div>
