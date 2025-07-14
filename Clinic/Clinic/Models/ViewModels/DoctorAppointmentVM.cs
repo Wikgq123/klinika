@@ -25,6 +25,6 @@ namespace Clinic.Models.ViewModels
 
         // pola do edycji statusu istniejących badań laboratoryjnych
         public List<int>? LabExamIds { get; set; }
-        public List<ExamStatus>? LabExamStatuses { get; set; }
+        public List<string>? LabExamStatuses { get; set; }
     }
 }

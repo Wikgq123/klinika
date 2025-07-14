@@ -1,5 +1,4 @@
 using Clinic.Data;
-using Clinic.Enums;
 using Clinic.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,34 +11,33 @@ namespace Clinic.Areas.HeadLabTechnician.Controllers
     public class LabExamsController : Controller
     {
         private readonly ApplicationDbContext _db;
-
         public LabExamsController(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Approve()
         {
             var exams = await _db.LabExams
                 .Include(e => e.LabTechnician)
                     .ThenInclude(lt => lt.ApplicationUser)
                 .Include(e => e.ExamSelection)
+                .Where(e => e.Status == "Completed")
                 .ToListAsync();
             return View(exams);
         }
 
         [HttpPost]
-        public IActionResult AcceptExam(int id, string headNotes)
+        public async Task<IActionResult> ApproveExam(int id)
         {
-            var exam = _db.LabExams.FirstOrDefault(e => e.LabExamId == id);
-            if (exam != null)
-            {
-                exam.HeadLabNotes = headNotes;
-                exam.AcceptDate = DateTime.Now;
-                exam.Status = ExamStatus.Completed;
-                _db.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
+            var exam = await _db.LabExams.FindAsync(id);
+            if (exam == null) return NotFound();
+
+            exam.Status = "Approved";
+            exam.ApprovedBy = User.Identity?.Name;
+            exam.ApprovedDate = DateTime.Now;
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Approve));
         }
     }
 }

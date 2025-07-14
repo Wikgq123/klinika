@@ -1,11 +1,12 @@
 @model IEnumerable<LabExam>
 
-<h2>Pending Lab Exams</h2>
+<h2>Completed Lab Exams</h2>
 <table class="table">
     <thead>
         <tr>
             <th>Exam</th>
-            <th>Patient</th>
+            <th>Technician</th>
+            <th>Result</th>
             <th></th>
         </tr>
     </thead>
@@ -14,12 +15,12 @@
     {
         <tr>
             <td>@exam.ExamSelection?.Name</td>
-            <td>@exam.Appointment?.Patient?.Name @exam.Appointment?.Patient?.Surname</td>
+            <td>@exam.PerformedBy</td>
+            <td>@exam.Result</td>
             <td>
-                <form asp-action="Complete" method="post" class="d-flex">
+                <form asp-action="ApproveExam" method="post">
                     <input type="hidden" name="id" value="@exam.LabExamId" />
-                    <input type="text" name="result" class="form-control me-2" placeholder="Result" />
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-success">Approve</button>
                 </form>
             </td>
         </tr>

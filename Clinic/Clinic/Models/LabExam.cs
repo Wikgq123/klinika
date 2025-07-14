@@ -1,5 +1,4 @@
-﻿using Clinic.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Clinic.Models
 {
@@ -9,11 +8,14 @@ namespace Clinic.Models
         public int LabExamId { get; set; }
         public string? DoctorsNotes { get; set; }
         public DateTime RequestDate { get; set; }
-        public string? Result { get; set; }
+        public string Result { get; set; }
         public DateTime? ExamDate { get; set; }
         public string? HeadLabNotes { get; set; }
         public DateTime? AcceptDate { get; set; }
-        public ExamStatus Status { get; set; }
+        public string Status { get; set; }
+        public string? PerformedBy { get; set; }
+        public string? ApprovedBy { get; set; }
+        public DateTime? ApprovedDate { get; set; }
         public int AppointmentId { get; set; }
         public Appointment Appointment { get; set; }
         public int? LabTechnicianId { get; set; }

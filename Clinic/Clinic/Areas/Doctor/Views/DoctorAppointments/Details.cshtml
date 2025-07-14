@@ -128,11 +128,14 @@
                         <td>@lab.RequestDate.ToString("g")</td>
                         <td>
                             <input type="hidden" asp-for="LabExamIds[i]" value="@lab.LabExamId" />
-                            <select asp-for="LabExamStatuses[i]" class="form-control"
-                                    asp-items="Html.GetEnumSelectList<Clinic.Enums.ExamStatus>()"></select>
+                            <select asp-for="LabExamStatuses[i]" class="form-control">
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Approved">Approved</option>
+                            </select>
                         </td>
                         <td>
-                            @if (lab.Status == Clinic.Enums.ExamStatus.Completed)
+                            @if (lab.Status == "Completed" || lab.Status == "Approved")
                             {
                                 <a asp-area="Doctor"
                                    asp-controller="LabExams"
