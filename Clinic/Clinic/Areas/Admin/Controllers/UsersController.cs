@@ -117,7 +117,7 @@ namespace Clinic.Areas.Admin.Controllers
 
                     if (currentRole == newRole)
                     {
-                        if (model.ApplicationUser.Doctor.DoctorId != null)
+                        if (model.ApplicationUser.Doctor != null)
                         {
                             user.Doctor.NPWZ = model.ApplicationUser.Doctor.NPWZ;
                         }
