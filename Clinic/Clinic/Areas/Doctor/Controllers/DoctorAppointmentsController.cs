@@ -138,37 +138,7 @@ namespace Clinic.Areas.Doctor.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(model.NewLabExamType))
-            {
-                var head = await _db.HeadLabTechnicians.FirstOrDefaultAsync();
-                if (head == null)
-                {
-                    ModelState.AddModelError(string.Empty, "No head lab technician.");
-                    return RedirectToAction(nameof(Index));
-                }
 
-                _db.LabExams.Add(new LabExam
-                {
-                    AppointmentId = appointment.AppointmentId,
-                    ExamSelectionId = model.NewLabExamType,
-                    Status = "Pending",
-                    RequestDate = System.DateTime.Now,
-                    HeadLabTechnicianId = head.HeadLabTechnicianId
-                });
-
-                // ensure the appointment appears as in progress when exams are ordered
-                appointment.Status = AppointmentStatus.InProgress;
-            }
-
-            if (!string.IsNullOrEmpty(model.NewPhysicalExamType) && !string.IsNullOrEmpty(model.NewPhysicalExamNotes))
-            {
-                _db.PhysicalExams.Add(new PhysicalExam
-                {
-                    AppointmentId = appointment.AppointmentId,
-                    ExamSelectionId = model.NewPhysicalExamType,
-                    Result = model.NewPhysicalExamNotes
-                });
-            }
 
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
