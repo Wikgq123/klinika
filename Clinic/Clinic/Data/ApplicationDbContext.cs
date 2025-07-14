@@ -1,6 +1,5 @@
 ﻿using Clinic.Enums;
 using Clinic.Models;
-using Clinic.Models.ExamRecords;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
