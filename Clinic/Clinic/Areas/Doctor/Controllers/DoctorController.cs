@@ -93,7 +93,7 @@ namespace Clinic.Areas.Doctor.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(DoctorAppointmentVM model)
         {
-            // Jeśli walidacja nie przeszła, przeładuj pełny model
+            // If validation failed, reload the full model
             if (!ModelState.IsValid)
             {
                 var fullAppt = await _db.Appointments
@@ -143,7 +143,7 @@ namespace Clinic.Areas.Doctor.Controllers
                 var head = await _db.HeadLabTechnicians.FirstOrDefaultAsync();
                 if (head == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Brak kierownika laboratorium.");
+                    ModelState.AddModelError(string.Empty, "No head lab technician.");
                     return RedirectToAction(nameof(Index));
                 }
 
