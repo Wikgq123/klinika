@@ -1,29 +1,29 @@
 ﻿@model Clinic.Models.ViewModels.DoctorAppointmentVM
 @{
-    ViewData["Title"] = "Szczegóły wizyty";
+    ViewData["Title"] = "Appointment Details";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <div class="mb-4">
     <dl class="row">
-        <dt class="col-sm-2">Pacjent</dt>
+        <dt class="col-sm-2">Patient</dt>
         <dd class="col-sm-10">@Model.Appointment.Patient.Name @Model.Appointment.Patient.Surname</dd>
 
-        <dt class="col-sm-2">Data wizyty</dt>
+        <dt class="col-sm-2">Appointment Date</dt>
         <dd class="col-sm-10">@Model.Appointment.AppointmentDate?.ToString("g")</dd>
 
-        <dt class="col-sm-2">Opis</dt>
+        <dt class="col-sm-2">Description</dt>
         <dd class="col-sm-10">@Model.Appointment.Description</dd>
     </dl>
 </div>
 
 <ul class="nav nav-tabs" id="apptTabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="visit-tab" data-bs-toggle="tab" data-bs-target="#visit" type="button" role="tab" aria-controls="visit" aria-selected="true">Wizyta</button>
+        <button class="nav-link active" id="visit-tab" data-bs-toggle="tab" data-bs-target="#visit" type="button" role="tab" aria-controls="visit" aria-selected="true">Visit</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">Historia</button>
+        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">History</button>
     </li>
 </ul>
 <div class="tab-content mt-3" id="apptTabsContent">
@@ -43,7 +43,7 @@
         <label asp-for="Appointment.Status"></label>
         <select asp-for="Appointment.Status" class="form-control"
                 asp-items="Html.GetEnumSelectList<Clinic.Enums.AppointmentStatus>()">
-            <option value="">-- wybierz --</option>
+            <option value="">-- select --</option>
         </select>
     </div>
 
@@ -54,7 +54,7 @@
 
     <hr />
 
-    <h4>Zleć badanie laboratoryjne</h4>
+    <h4>Order Lab Exam</h4>
     <div class="form-row mb-3">
         <div class="col-md-6">
             <label asp-for="NewLabExamType"></label>
@@ -64,12 +64,12 @@
                              .Where(e => e.Type == Clinic.Enums.ExamType.Lab),
                         "Shortcut",
                         "Name"))">
-                <option value="">-- wybierz badanie --</option>
+                <option value="">-- select exam --</option>
             </select>
         </div>
     </div>
 
-    <h4>Zleć badanie fizykalne</h4>
+    <h4>Order Physical Exam</h4>
     <div class="form-row mb-3">
         <div class="col-md-6">
             <label asp-for="NewPhysicalExamType"></label>
@@ -79,7 +79,7 @@
                              .Where(e => e.Type == Clinic.Enums.ExamType.Physical),
                         "Shortcut",
                         "Name"))">
-                <option value="">-- wybierz badanie --</option>
+                <option value="">-- select exam --</option>
             </select>
         </div>
         <div class="col-md-6">
@@ -88,33 +88,33 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-success mt-3">Zapisz zmiany</button>
+    <button type="submit" class="btn btn-success mt-3">Save Changes</button>
     <a asp-area="Doctor"
        asp-controller="DoctorAppointments"
        asp-action="Index"
-       class="btn btn-secondary mt-3">Powrót</a>
-    @* Przycisk anulowania wizyty *@
+       class="btn btn-secondary mt-3">Back</a>
+    @* Appointment cancellation button *@
     @if (Model.Appointment.Status != Clinic.Enums.AppointmentStatus.Cancelled)
     {
         <a asp-area="Doctor"
            asp-controller="DoctorAppointments"
            asp-action="Cancel"
            asp-route-id="@Model.Appointment.AppointmentId"
-           class="btn btn-danger mt-3 ml-2">Anuluj wizytę</a>
+           class="btn btn-danger mt-3 ml-2">Cancel Appointment</a>
     }
     else
     {
-        <span class="badge bg-secondary mt-3 ml-2">Wizyta anulowana</span>
+        <span class="badge bg-secondary mt-3 ml-2">Appointment Cancelled</span>
     }
     <hr />
-    <h4>Badania laboratoryjne</h4>
+    <h4>Lab Exams</h4>
     @if (Model.Appointment.LabExams?.Any() ?? false)
     {
         <table class="table table-sm">
             <thead>
                 <tr>
                     <th>Test</th>
-                    <th>Data zlecenia</th>
+                    <th>Order Date</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -139,7 +139,7 @@
                                    asp-action="Details"
                                    asp-route-id="@lab.LabExamId"
                                    class="btn btn-link btn-sm">
-                                    Zobacz wynik
+                                    View Result
                                 </a>
                             }
                         </td>
@@ -150,14 +150,14 @@
     }
 
     <hr />
-    <h4>Badania fizykalne</h4>
+    <h4>Physical Exams</h4>
     @if (Model.Appointment.PhysicalExams?.Any() ?? false)
     {
         <table class="table table-sm">
             <thead>
                 <tr>
                     <th>Test</th>
-                    <th>Wynik</th>
+                    <th>Result</th>
                 </tr>
             </thead>
             <tbody>
@@ -177,12 +177,12 @@
     </div>
 
     <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-        <h4>Poprzednie wizyty pacjenta</h4>
+        <h4>Patient's Previous Visits</h4>
         @if (Model.PreviousVisits.Any())
         {
             <table class="table table-sm">
                 <thead>
-                    <tr><th>Data</th><th>Status</th><th></th></tr>
+                    <tr><th>Date</th><th>Status</th><th></th></tr>
                 </thead>
                 <tbody>
                     @foreach (var pv in Model.PreviousVisits)
@@ -193,7 +193,7 @@
                             <td>
                                 <a asp-area="Doctor" asp-controller="DoctorAppointments"
                                    asp-action="Details" asp-route-id="@pv.AppointmentId"
-                                   class="btn btn-link btn-sm">Zobacz</a>
+                                   class="btn btn-link btn-sm">View</a>
                             </td>
                         </tr>
                     }
@@ -202,7 +202,7 @@
         }
         else
         {
-            <div class="alert alert-info">Brak wcześniejszych wizyt</div>
+            <div class="alert alert-info">No previous visits</div>
         }
     </div>
 </div>

@@ -1,27 +1,27 @@
 ﻿@model Clinic.Models.LabExam
 @{
-    ViewData["Title"] = "Wynik badania";
+    ViewData["Title"] = "Exam Result";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <dl class="row">
-    <dt class="col-sm-2">Pacjent</dt>
+    <dt class="col-sm-2">Patient</dt>
     <dd class="col-sm-10">@Model.Appointment.Patient.Name @Model.Appointment.Patient.Surname</dd>
 
-    <dt class="col-sm-2">Badanie</dt>
+    <dt class="col-sm-2">Exam</dt>
     <dd class="col-sm-10">@Model.ExamSelection.Name</dd>
 
-    <dt class="col-sm-2">Data zlecenia</dt>
+    <dt class="col-sm-2">Order Date</dt>
     <dd class="col-sm-10">@Model.RequestDate.ToString("g")</dd>
 
-    <dt class="col-sm-2">Data wykonania</dt>
+    <dt class="col-sm-2">Exam Date</dt>
     <dd class="col-sm-10">@Model.ExamDate?.ToString("g")</dd>
 
-    <dt class="col-sm-2">Wynik</dt>
+    <dt class="col-sm-2">Result</dt>
     <dd class="col-sm-10">@Model.Result</dd>
 
-    <dt class="col-sm-2">Uwagi laboranta</dt>
+    <dt class="col-sm-2">Lab Tech Notes</dt>
     <dd class="col-sm-10">@Model.HeadLabNotes</dd>
 </dl>
 
@@ -30,5 +30,5 @@
    asp-action="Details"
    asp-route-id="@Model.AppointmentId"
    class="btn btn-secondary">
-    Powrót do wizyty
+    Back to Appointment
 </a>
