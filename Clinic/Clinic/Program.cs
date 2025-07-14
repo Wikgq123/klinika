@@ -47,6 +47,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapAreaControllerRoute(
+    name: "doctor",
+    areaName: "Doctor",
+    pattern: "Doctor/{controller=Doctor}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area=Home}/{controller=Home}/{action=Index}/{id?}"

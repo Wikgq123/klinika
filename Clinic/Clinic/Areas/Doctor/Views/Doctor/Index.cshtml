@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2>Welcome, Doctor!</h2>
+<p>Select an option below:</p>
+
+<div class="d-flex flex-column gap-2">
+    <a asp-area="Doctor" asp-controller="DoctorAppointments" asp-action="Index" class="btn btn-primary">View Appointments</a>
+    <a asp-area="Doctor" asp-controller="PhysicalExam" asp-action="Index" class="btn btn-secondary">Physical Examinations</a>
+    <a asp-area="Doctor" asp-controller="LabExams" asp-action="Details" asp-route-id="1" class="btn btn-info">Lab Results</a>
+</div>
