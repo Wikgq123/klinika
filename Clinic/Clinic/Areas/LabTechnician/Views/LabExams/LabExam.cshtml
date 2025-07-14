@@ -83,7 +83,7 @@
                 Cancel Exam
             </button>
         </div>
-        @if (Model.LabExam.Status != Clinic.Enums.ExamStatus.Canceled)
+        @if (Model.LabExam.Status != "Canceled")
         {
             <input type="submit" value="Save Changes" class="btn btn-primary" />
         }

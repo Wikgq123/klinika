@@ -151,7 +151,7 @@ namespace Clinic.Areas.Doctor.Controllers
                 {
                     AppointmentId = appointment.AppointmentId,
                     ExamSelectionId = model.NewLabExamType,
-                    Status = ExamStatus.Awaiting,
+                    Status = "Pending",
                     RequestDate = System.DateTime.Now,
                     HeadLabTechnicianId = head.HeadLabTechnicianId
                 });

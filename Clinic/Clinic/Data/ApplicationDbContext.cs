@@ -66,7 +66,6 @@ namespace Clinic.Data
 
             modelBuilder.Entity<ExamSelection>().Property(x => x.Type).HasConversion<string>();
             modelBuilder.Entity<Appointment>().Property(x => x.Status).HasConversion<string>();
-            modelBuilder.Entity<LabExam>().Property(x => x.Status).HasConversion<string>();
 
             modelBuilder.Entity<Patient>().HasData(
                 new Patient { PatientId = 1, Name = "Gabriel", Surname = "Drabik", AddressId = 1, PESEL = "65110414558" },
