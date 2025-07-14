@@ -1,6 +1,19 @@
+@model IEnumerable<string>
+@attribute [Authorize(Roles = "Doctor")]
 @{
     ViewData["Title"] = "Physical Examinations";
 }
-
 <h2>@ViewData["Title"]</h2>
-<p>Physical examinations page.</p>
+<table class="table">
+    <tbody>
+@foreach (var exam in Model)
+{
+        <tr>
+            <td>@exam</td>
+            <td>
+                <a class="btn btn-primary" asp-action="Start" asp-route-examType="@exam">Start</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
