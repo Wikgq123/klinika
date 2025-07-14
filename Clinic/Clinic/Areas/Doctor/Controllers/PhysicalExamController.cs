@@ -5,6 +5,7 @@ using Clinic.Models;
 using Clinic.Data;
 using Clinic.Models.ExamRecords;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Clinic.Areas.Doctor.Controllers
@@ -55,6 +56,44 @@ namespace Clinic.Areas.Doctor.Controllers
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Doctor/PhysicalExam/Order
+        [HttpGet]
+        public async Task<IActionResult> Order(int appointmentId)
+        {
+            var appointment = await _db.Appointments
+                .Include(a => a.Patient)
+                .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
+            if (appointment == null) return NotFound();
+
+            ViewBag.Appointment = appointment;
+            ViewBag.Exams = await _db.ExamSelections
+                .Where(e => e.Type == Clinic.Enums.ExamType.Physical)
+                .ToListAsync();
+            return View();
+        }
+
+        // POST: Doctor/PhysicalExam/Order
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Order(int appointmentId, string examSelectionId, string notes)
+        {
+            var appointment = await _db.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
+            if (appointment == null) return NotFound();
+
+            var exam = new PhysicalExam
+            {
+                AppointmentId = appointmentId,
+                ExamSelectionId = examSelectionId,
+                Result = notes
+            };
+
+            _db.PhysicalExams.Add(exam);
+            appointment.Status = Clinic.Enums.AppointmentStatus.InProgress;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Details", "DoctorAppointments", new { id = appointmentId });
         }
     }
 }

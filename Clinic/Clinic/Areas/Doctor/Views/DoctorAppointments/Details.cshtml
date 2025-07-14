@@ -55,38 +55,14 @@
     <hr />
 
     <h4>Order Lab Exam</h4>
-    <div class="form-row mb-3">
-        <div class="col-md-6">
-            <label asp-for="NewLabExamType"></label>
-            <select asp-for="NewLabExamType" class="form-control"
-                    asp-items="@(new SelectList(
-                        Model.ExamSelections
-                             .Where(e => e.Type == Clinic.Enums.ExamType.Lab),
-                        "Shortcut",
-                        "Name"))">
-                <option value="">-- select exam --</option>
-            </select>
-        </div>
-    </div>
+    <a asp-area="Doctor" asp-controller="LabExams" asp-action="Order"
+       asp-route-appointmentId="@Model.Appointment.AppointmentId"
+       class="btn btn-outline-primary mb-3">New Lab Exam</a>
 
     <h4>Order Physical Exam</h4>
-    <div class="form-row mb-3">
-        <div class="col-md-6">
-            <label asp-for="NewPhysicalExamType"></label>
-            <select asp-for="NewPhysicalExamType" class="form-control"
-                    asp-items="@(new SelectList(
-                        Model.ExamSelections
-                             .Where(e => e.Type == Clinic.Enums.ExamType.Physical),
-                        "Shortcut",
-                        "Name"))">
-                <option value="">-- select exam --</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label asp-for="NewPhysicalExamNotes"></label>
-            <input asp-for="NewPhysicalExamNotes" class="form-control" />
-        </div>
-    </div>
+    <a asp-area="Doctor" asp-controller="PhysicalExam" asp-action="Order"
+       asp-route-appointmentId="@Model.Appointment.AppointmentId"
+       class="btn btn-outline-primary mb-3">New Physical Exam</a>
 
     <button type="submit" class="btn btn-success mt-3">Save Changes</button>
     <a asp-area="Doctor"
