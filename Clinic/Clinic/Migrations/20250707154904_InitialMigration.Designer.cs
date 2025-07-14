@@ -13,7 +13,7 @@ namespace Clinic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250707154904_init")]
-    partial class init
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

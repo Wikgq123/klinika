@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Clinic.Models;
 using Clinic.Data;
-using Clinic.Models.ExamRecords;
+using Microsoft.EntityFrameworkCore;
+using PhysicalExamMain = Clinic.Models.PhysicalExam;
+using PhysicalExamRecord = Clinic.Models.ExamRecords.PhysicalExam;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,7 +45,7 @@ namespace Clinic.Areas.Doctor.Controllers
         {
             if (string.IsNullOrEmpty(examType)) return RedirectToAction(nameof(Index));
 
-            var exam = new Clinic.Models.ExamRecords.PhysicalExam
+            var exam = new PhysicalExamRecord
             {
                 ExamType = examType,
                 Notes = notes,
@@ -82,7 +84,7 @@ namespace Clinic.Areas.Doctor.Controllers
             var appointment = await _db.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
             if (appointment == null) return NotFound();
 
-            var exam = new PhysicalExam
+            var exam = new PhysicalExamMain
             {
                 AppointmentId = appointmentId,
                 ExamSelectionId = examSelectionId,
