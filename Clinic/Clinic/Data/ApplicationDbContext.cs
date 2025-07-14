@@ -1,5 +1,6 @@
 ﻿using Clinic.Enums;
 using Clinic.Models;
+using Clinic.Models.ExamRecords;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace Clinic.Data
         public DbSet<LabExam> LabExams { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<PhysicalExam> PhysicalExams { get; set; }
+        public DbSet<Clinic.Models.ExamRecords.PhysicalExam> PhysicalExamRecords { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Receptionist> Receptionists { get; set; }
         public DbSet<Admin> Admins { get; set; }
